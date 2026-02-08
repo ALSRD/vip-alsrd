@@ -2,140 +2,93 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ALSRD - Asistente VIP</title>
     <style>
         :root { --azul: #003366; --dorado: #d4af37; --fondo: #f4f4f9; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--fondo); margin: 0; display: flex; justify-content: center; height: 100vh; overflow: hidden; }
-        .chat-container { width: 100%; max-width: 450px; background: #fff; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.15); height: 100vh; }
-        .header { background: linear-gradient(135deg, var(--azul) 0%, #001f3f 100%); color: white; padding: 15px; display: flex; align-items: center; border-bottom: 4px solid var(--dorado); }
-        .header-icon { background: var(--dorado); width: 45px; height: 45px; border-radius: 50%; margin-right: 12px; display: flex; align-items: center; justify-content: center; color: var(--azul); font-weight: 900; font-size: 20px; }
-        .header h1 { font-size: 15px; margin: 0; font-weight: 700; }
-        .messages { flex-grow: 1; padding: 20px; overflow-y: auto; background-color: #e5ddd5; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 20px 20px; display: flex; flex-direction: column; }
-        .message { margin-bottom: 15px; padding: 12px 16px; border-radius: 12px; max-width: 90%; font-size: 14px; line-height: 1.5; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        .bot { background-color: #fff; align-self: flex-start; border-left: 4px solid var(--dorado); border-radius: 0 12px 12px 12px; }
-        .user { background-color: #d1e7dd; align-self: flex-end; border-right: 4px solid var(--azul); border-radius: 12px 0 12px 12px; margin-left: auto; }
-        .plan-card { background: #f8f9fa; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #ddd; cursor: pointer; border-left: 5px solid var(--dorado); }
-        .plan-header { font-weight: bold; color: var(--azul); display: flex; justify-content: space-between; }
-        .plan-price { color: #2e7d32; font-weight: bold; }
-        .confirm-btns { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
-        .btn { border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; text-align: center; text-decoration: none; font-size: 13px; }
-        .btn-si { background-color: #2e7d32; }
-        .btn-no { background-color: #1a1a1a; }
-        .progress-bar { width: 100%; background: #e0e0e0; border-radius: 10px; height: 12px; margin: 15px 0; border: 1px solid #c5a028; overflow: hidden; }
-        .progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); background-size: 400% 400%; animation: load 8s forwards, shine 2s infinite; }
-        @keyframes load { 100% { width: 100%; } }
-        @keyframes shine { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
-        .wa-btn { display: block; background-color: #25D366; color: white; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold; text-align: center; margin-top: 15px; border: 2px solid var(--dorado); }
-        .input-area { padding: 15px; background: #fff; display: flex; border-top: 1px solid #ddd; }
-        input { flex-grow: 1; padding: 12px; border: 1px solid #ccc; border-radius: 25px; outline: none; }
-        button#mainSend { background: var(--azul); color: white; border: none; padding: 12px 18px; margin-left: 10px; border-radius: 50%; cursor: pointer; }
-        .typing { font-size: 12px; color: #666; margin: 10px 20px; display: none; font-style: italic; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--fondo); margin: 0; padding: 0; height: 100vh; height: -webkit-fill-available; display: flex; flex-direction: column; overflow: hidden; }
+        .header { background: linear-gradient(135deg, var(--azul) 0%, #001f3f 100%); color: white; padding: 12px; display: flex; align-items: center; border-bottom: 4px solid var(--dorado); flex-shrink: 0; }
+        .header-icon { background: var(--dorado); width: 40px; height: 40px; border-radius: 50%; margin-right: 12px; display: flex; align-items: center; justify-content: center; color: var(--azul); font-weight: 900; }
+        .messages { flex: 1; padding: 15px; overflow-y: auto; background-color: #e5ddd5; display: flex; flex-direction: column; }
+        .message { margin-bottom: 12px; padding: 12px; border-radius: 12px; max-width: 85%; font-size: 14px; line-height: 1.4; position: relative; }
+        .bot { background: white; align-self: flex-start; border-left: 4px solid var(--dorado); border-radius: 0 12px 12px 12px; }
+        .user { background: #d1e7dd; align-self: flex-end; border-right: 4px solid var(--azul); border-radius: 12px 0 12px 12px; }
+        .plan-card { background: #fff; padding: 10px; margin: 6px 0; border-radius: 8px; border: 1px solid #ddd; cursor: pointer; border-left: 4px solid var(--dorado); }
+        .input-area { padding: 10px; background: #fff; display: flex; border-top: 1px solid #ccc; flex-shrink: 0; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
+        input { flex: 1; padding: 12px 15px; border: 1px solid #bbb; border-radius: 25px; outline: none; font-size: 16px; /* Evita zoom en iPhone */ }
+        button#mainSend { background: var(--azul); color: white; border: none; padding: 10px 15px; margin-left: 8px; border-radius: 50%; cursor: pointer; font-size: 18px; }
+        .wa-btn { display: block; background: #25D366; color: white; text-decoration: none; padding: 12px; border-radius: 8px; text-align: center; margin-top: 10px; font-weight: bold; border-bottom: 3px solid #128C7E; }
+        .confirm-btns { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+        .btn-opt { padding: 10px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; color: white; text-align: center; }
     </style>
 </head>
 <body>
-<div class="chat-container">
     <div class="header">
         <div class="header-icon">#</div>
-        <div><h1>ALSRD • Maestro de los Números</h1><span style="font-size: 11px;">Asistente Comercial Oficial</span></div>
+        <div><h1 style="font-size: 14px; margin: 0;">ALSRD • Maestro de los Números</h1><span style="font-size: 10px;">Asistente Comercial Oficial</span></div>
     </div>
     <div class="messages" id="chatBox"></div>
-    <div class="typing" id="typingIndicator">Maestro escribiendo...</div>
     <div class="input-area">
-        <input type="text" id="userInput" placeholder="Escribe aquí..." onkeypress="if(event.key==='Enter') sendMessage()">
+        <input type="text" id="userInput" placeholder="Escribe un mensaje..." autocomplete="off">
         <button id="mainSend" onclick="sendMessage()">➤</button>
     </div>
-</div>
+
 <script>
     const planesVIP = [
         { id: 1, nombre: 'VIP EXTRA', precio: '5,000', desc: '15 días. Loterías Nacionales y Leidsa.' },
         { id: 2, nombre: 'VIP GOLD', precio: '10,000', desc: '1 mes. Nacionales cada 3 días.' },
         { id: 3, nombre: 'VIP SIMPLE', precio: '3,000', desc: 'Según ciclo activo.' },
-        { id: 4, nombre: 'SOLO (4) ANGUILAS', precio: '1,800', desc: 'Cada 3 días.' },
+        { id: 4, nombre: 'SOLO ANGUILAS', precio: '1,800', desc: 'Cada 3 días.' },
         { id: 5, nombre: 'OFERTA SOLO PALES', precio: '4,500', desc: '15 días.' },
-        { id: 6, nombre: 'LÍNEAS FIN DE SEMANA', precio: '1,500', desc: 'Vie-Sab-Dom (1 palé + 2 fuertes).' },
-        { id: 7, nombre: 'LÍNEAS NY Y FLORIDA', precio: '2,000', desc: '15 días. EE.UU.' },
+        { id: 6, nombre: 'FIN DE SEMANA', precio: '1,500', desc: 'Vie-Sab-Dom (1 palé + 2 fuertes).' },
+        { id: 7, nombre: 'NY Y FLORIDA', precio: '2,000', desc: '15 días.' },
         { id: 8, nombre: 'SOLO PAREJAS', precio: '500', desc: '2 y 3 parejas.' },
-        { id: 9, nombre: 'NÚMERO QUE MÁS SALE', precio: '15,000', desc: '1 semana (Lun-Lun).' },
+        { id: 9, nombre: 'EL QUE MÁS SALE', precio: '15,000', desc: '1 semana (Lun-Lun).' },
         { id: 10, nombre: 'PALÉ SÁBADOS', precio: '1,000', desc: 'Solo sábados.' },
         { id: 11, nombre: 'UN SOLO MIÉRCOLES', precio: '1,000', desc: 'Solo miércoles.' }
     ];
-    const bancosInfo = `<b>🏦 CUENTAS César Saviñón:</b><br>🔹 Popular: 807385729<br>🔹 BHD: 17071310013<br>🔹 Reservas: 9605441241<br>🔹 ADOPEM: 51092000105346<br>🔹 ADEMI: 20051001216315`;
-    let step = 0; let selectedPlan = null;
-    function addMessage(html, type) {
-        const box = document.getElementById('chatBox');
+
+    const chatBox = document.getElementById('chatBox');
+    const userInput = document.getElementById('userInput');
+
+    function addMessage(text, type) {
         const div = document.createElement('div');
         div.className = `message ${type}`;
-        div.innerHTML = html;
-        box.appendChild(div);
-        box.scrollTop = box.scrollHeight;
+        div.innerHTML = text;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
     }
-    function showTyping(show) { document.getElementById('typingIndicator').style.display = show ? 'block' : 'none'; }
+
     function sendMessage() {
-        const inp = document.getElementById('userInput');
-        const val = inp.value.trim();
-        if(!val) return;
-        addMessage(val, 'user');
-        inp.value = "";
-        logicaConversacional(val);
-    }
-    function logicaConversacional(input) {
-        showTyping(true);
+        const text = userInput.value.trim();
+        if(!text) return;
+        addMessage(text, 'user');
+        userInput.value = '';
+        
         setTimeout(() => {
-            showTyping(false);
-            if(step === 0) {
-                addMessage("Perfecto 👍<br><br>¿Te interesa conocer alguno de nuestros planes VIP disponibles?", 'bot');
-                step = 1;
-            } else if(step === 1) {
-                const text = input.toLowerCase();
-                if(text.includes("si") || text.includes("ver") || text.includes("interesa")) {
-                    addMessage("Excelente decisión. Te enviaré ahora nuestro catálogo para que puedas revisarlo con calma.", 'bot');
-                    step = 2;
-                    setTimeout(mostrarCatalogo, 2000);
-                }
+            if(text.toLowerCase().includes('hola') || text.toLowerCase().includes('si')) {
+                addMessage("¡Excelente! Aquí tienes nuestros planes VIP. Toca el que te interese:", 'bot');
+                let cat = "";
+                planesVIP.forEach(p => {
+                    cat += `<div class="plan-card" onclick="verPlan(${p.id})"><b>${p.nombre}</b> - RD$${p.precio}</div>`;
+                });
+                addMessage(cat, 'bot');
             }
-        }, 1200);
+        }, 800);
     }
-    function mostrarCatalogo() {
-        showTyping(true);
+
+    window.verPlan = function(id) {
+        const p = planesVIP.find(x => x.id === id);
+        addMessage(`Elegí ${p.nombre}`, 'user');
         setTimeout(() => {
-            showTyping(false);
-            let h = "<b>💎 CATÁLOGO VIP OFICIAL:</b><br>";
-            planesVIP.forEach(p => {
-                h += `<div class="plan-card" onclick="irADetalle(${p.id})"><div class="plan-header">${p.nombre} <span class="plan-price">RD$${p.precio}</span></div></div>`;
-            });
-            addMessage(h, 'bot');
-        }, 1500);
+            addMessage(`<b>${p.nombre}</b><br>💰 RD$${p.precio}<br>📝 ${p.desc}<br><br>🏦 <b>César Saviñón:</b><br>Popular: 807385729<br>BHD: 17071310013<br>Reservas: 9605441241`, 'bot');
+            addMessage(`<a href="https://wa.me/18493182005?text=Hola, elegí el ${p.nombre}" class="wa-btn">✅ ENVIAR BAUCHE AHORA</a>`, 'bot');
+        }, 600);
     }
-    window.irADetalle = function(id) {
-        selectedPlan = planesVIP.find(p => p.id === id);
-        addMessage(`Ver detalles del ${selectedPlan.nombre}`, 'user');
-        showTyping(true);
-        setTimeout(() => {
-            showTyping(false);
-            addMessage(`✅ <b>${selectedPlan.nombre}</b><br><br>💰 <b>Inversión:</b> RD$ ${selectedPlan.precio}<br>📝 <b>Servicio:</b> ${selectedPlan.desc}<br><br>${bancosInfo}`, 'bot');
-            setTimeout(() => {
-                addMessage(`¿Deseas formalizar tu inscripción al ${selectedPlan.nombre} ahora?<br><div class="confirm-btns"><button class="btn btn-si" onclick="formalizarInscripcion()">SÍ, ME INTERESA</button><button class="btn btn-no" onclick="location.reload()">⬅️ VOLVER AL CATÁLOGO</button></div>`, 'bot');
-            }, 2000);
-        }, 1200);
-    }
-    window.formalizarInscripcion = function() {
-        addMessage("Me interesa.", 'user');
-        showTyping(true);
-        setTimeout(() => {
-            showTyping(false);
-            const link = `https://wa.me/18493182005?text=${encodeURIComponent("Hola Maestro, elegí el " + selectedPlan.nombre + ". Pago: RD$" + selectedPlan.precio + ". Enviaré el bauche.")}`;
-            addMessage(`<b>Excelente.</b><br><br>Dale clic al botón <b>“Enviar bauche al maestro”</b> para enviar la foto del comprobante y formalizar tu inscripción.<br><div class="progress-bar"><div class="progress-fill"></div></div><a href="${link}" class="wa-btn">🚀 ENVIAR BAUCHE AL MAESTRO</a>`, 'bot');
-            setTimeout(() => { window.location.href = link; }, 8500);
-        }, 1000);
-    }
-    window.onload = () => {
-        showTyping(true);
-        setTimeout(() => {
-            showTyping(false);
-            addMessage("👋 Bienvenido/a. Soy el asistente de ALSRD.<br><br>¿En qué puedo asistirte hoy?", 'bot');
-        }, 1000);
-    };
+
+    window.onload = () => addMessage("👋 Hola, soy el asistente de ALSRD. Escribe <b>'Hola'</b> para ver los planes.", 'bot');
+    userInput.addEventListener("keypress", (e) => { if(e.key === "Enter") sendMessage(); });
 </script>
 </body>
 </html>
